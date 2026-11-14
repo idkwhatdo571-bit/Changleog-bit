@@ -16,8 +16,8 @@ jobs:
           RELEASE_BODY: ${{ github.event.release.body }}
         run: |
           PAYLOAD=$(jq -n \
-            --arg title "🚀 New Release: $RELEASE_NAME ($TAG_NAME)" \
-            --arg description "$RELEASE_BODY" \
+            --arg title "🚀 New Release: Test (1.0.0)" \
+            --arg description "TestY" \
             '{
               embeds: [
                 {
