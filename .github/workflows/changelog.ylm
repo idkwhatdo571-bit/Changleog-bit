@@ -1,0 +1,33 @@
+name: Send Changelog to Discord
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  discord-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Webhook Notification
+        env:
+          WEBHOOK_URL: "https://discord.com/api/webhooks/1571103663806611546/Gk9ldLLW5NfeGdfAMGQo_K0t7Wagk0JD6zw3myaIg8WBIvcA10OlsIfu9M8fAsoCO0LQ"
+          TAG_NAME: ${{ github.event.release.tag_name }}
+          RELEASE_NAME: ${{ github.event.release.name }}
+          RELEASE_BODY: ${{ github.event.release.body }}
+        run: |
+          PAYLOAD=$(jq -n \
+            --arg title "🚀 New Release: $RELEASE_NAME ($TAG_NAME)" \
+            --arg description "$RELEASE_BODY" \
+            '{
+              embeds: [
+                {
+                  title: $title,
+                  description: $description,
+                  color: 8323327
+                }
+              ]
+            }')
+
+          curl -H "Content-Type: application/json" \
+               -d "$PAYLOAD" \
+               "$WEBHOOK_URL"
